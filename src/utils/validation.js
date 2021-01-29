@@ -16,7 +16,7 @@ const schema = {
   mcc: Joi.number().min(-1).max(1),
   npv: Joi.number().min(0).max(1),
   ths: Joi.number().min(0).max(1),
-  err: Joi.object().optional(),
+  err: Joi.optional(),
   tsLock: Joi.boolean(),
   psLock: Joi.boolean(),
   nsLock: Joi.boolean(),

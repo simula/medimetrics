@@ -173,6 +173,30 @@ const reducer = (state, action) => {
         };
     case actions.ADD_PS:
       if (
+        action.payload <= 0 ||
+        (state.ts && action.payload > state.ts) ||
+        (state.tp && action.payload < state.tp) ||
+        (state.fn && action.payload < state.fn)
+      ) {
+        return {
+          ...state,
+          err: { ps: "Invalid input for Positive samples" },
+          tsLock: true,
+          nsLock: true,
+          tpLock: true,
+          fpLock: true,
+          tnLock: true,
+          fnLock: true,
+          rcLock: true,
+          prcLock: true,
+          f1Lock: true,
+          accLock: true,
+          mccLock: true,
+          spfLock: true,
+          npvLock: true,
+          thsLock: true,
+        };
+      } else if (
         (state.tp > 0 &&
           state.fn > 0 &&
           action.payload !== state.tp + state.fn) ||
@@ -210,30 +234,6 @@ const reducer = (state, action) => {
             (state.tp && state.fn) || state.ps
               ? { conflict: "Input conflict" }
               : { conflict: "" },
-        };
-      } else if (
-        action.payload <= 0 ||
-        (state.ts && action.payload > state.ts) ||
-        (state.tp && action.payload < state.tp) ||
-        (state.fn && action.payload < state.fn)
-      ) {
-        return {
-          ...state,
-          err: { ps: "Invalid input for Positive samples" },
-          tsLock: true,
-          nsLock: true,
-          tpLock: true,
-          fpLock: true,
-          tnLock: true,
-          fnLock: true,
-          rcLock: true,
-          prcLock: true,
-          f1Lock: true,
-          accLock: true,
-          mccLock: true,
-          spfLock: true,
-          npvLock: true,
-          thsLock: true,
         };
       } else
         return {
@@ -386,6 +386,31 @@ const reducer = (state, action) => {
         };
     case actions.ADD_NS:
       if (
+        action.payload <= 0 ||
+        (state.ts && action.payload > state.ts) ||
+        (state.fp && action.payload < state.fp) ||
+        (state.tn && action.payload < state.tn)
+      ) {
+        return {
+          ...state,
+          ns: action.payload,
+          err: { ns: "Invalid input for Negative samples" },
+          tsLock: true,
+          psLock: true,
+          tpLock: true,
+          fpLock: true,
+          tnLock: true,
+          fnLock: true,
+          rcLock: true,
+          prcLock: true,
+          f1Lock: true,
+          accLock: true,
+          mccLock: true,
+          spfLock: true,
+          npvLock: true,
+          thsLock: true,
+        };
+      } else if (
         (state.tn > 0 &&
           state.fp > 0 &&
           action.payload !== state.tn + state.fp) ||
@@ -423,31 +448,6 @@ const reducer = (state, action) => {
             (state.fp && state.tn) || state.ns
               ? { conflict: "Input conflict" }
               : { conflict: "" },
-        };
-      } else if (
-        action.payload <= 0 ||
-        (state.ts && action.payload > state.ts) ||
-        (state.fp && action.payload < state.fp) ||
-        (state.tn && action.payload < state.tn)
-      ) {
-        return {
-          ...state,
-          ns: action.payload,
-          err: { ns: "Invalid input for Negative samples" },
-          tsLock: true,
-          psLock: true,
-          tpLock: true,
-          fpLock: true,
-          tnLock: true,
-          fnLock: true,
-          rcLock: true,
-          prcLock: true,
-          f1Lock: true,
-          accLock: true,
-          mccLock: true,
-          spfLock: true,
-          npvLock: true,
-          thsLock: true,
         };
       } else
         return {
