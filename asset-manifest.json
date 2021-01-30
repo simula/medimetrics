@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "/medimetrics.no/static/css/main.433e7c48.chunk.css",
-    "main.js": "/medimetrics.no/static/js/main.6d66b3fa.chunk.js",
-    "main.js.map": "/medimetrics.no/static/js/main.6d66b3fa.chunk.js.map",
-    "runtime-main.js": "/medimetrics.no/static/js/runtime-main.4964f46a.js",
-    "runtime-main.js.map": "/medimetrics.no/static/js/runtime-main.4964f46a.js.map",
-    "static/css/2.60c921d9.chunk.css": "/medimetrics.no/static/css/2.60c921d9.chunk.css",
-    "static/js/2.12b8c9c5.chunk.js": "/medimetrics.no/static/js/2.12b8c9c5.chunk.js",
-    "static/js/2.12b8c9c5.chunk.js.map": "/medimetrics.no/static/js/2.12b8c9c5.chunk.js.map",
-    "static/js/3.c74799b3.chunk.js": "/medimetrics.no/static/js/3.c74799b3.chunk.js",
-    "static/js/3.c74799b3.chunk.js.map": "/medimetrics.no/static/js/3.c74799b3.chunk.js.map",
-    "index.html": "/medimetrics.no/index.html",
-    "static/css/2.60c921d9.chunk.css.map": "/medimetrics.no/static/css/2.60c921d9.chunk.css.map",
-    "static/css/main.433e7c48.chunk.css.map": "/medimetrics.no/static/css/main.433e7c48.chunk.css.map",
-    "static/js/2.12b8c9c5.chunk.js.LICENSE.txt": "/medimetrics.no/static/js/2.12b8c9c5.chunk.js.LICENSE.txt",
-    "static/media/App.css": "/medimetrics.no/static/media/background.31263592.jpg",
-    "static/media/font-awesome.min.css": "/medimetrics.no/static/media/fontawesome-webfont.f691f37e.woff"
+    "main.css": "/static/css/main.36fae83f.chunk.css",
+    "main.js": "/static/js/main.6d66b3fa.chunk.js",
+    "main.js.map": "/static/js/main.6d66b3fa.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.01f43b33.js",
+    "runtime-main.js.map": "/static/js/runtime-main.01f43b33.js.map",
+    "static/css/2.c7ba4ef9.chunk.css": "/static/css/2.c7ba4ef9.chunk.css",
+    "static/js/2.990a9493.chunk.js": "/static/js/2.990a9493.chunk.js",
+    "static/js/2.990a9493.chunk.js.map": "/static/js/2.990a9493.chunk.js.map",
+    "static/js/3.c74799b3.chunk.js": "/static/js/3.c74799b3.chunk.js",
+    "static/js/3.c74799b3.chunk.js.map": "/static/js/3.c74799b3.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.c7ba4ef9.chunk.css.map": "/static/css/2.c7ba4ef9.chunk.css.map",
+    "static/css/main.36fae83f.chunk.css.map": "/static/css/main.36fae83f.chunk.css.map",
+    "static/js/2.990a9493.chunk.js.LICENSE.txt": "/static/js/2.990a9493.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/static/media/background.31263592.jpg",
+    "static/media/font-awesome.min.css": "/static/media/fontawesome-webfont.f691f37e.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.4964f46a.js",
-    "static/css/2.60c921d9.chunk.css",
-    "static/js/2.12b8c9c5.chunk.js",
-    "static/css/main.433e7c48.chunk.css",
+    "static/js/runtime-main.01f43b33.js",
+    "static/css/2.c7ba4ef9.chunk.css",
+    "static/js/2.990a9493.chunk.js",
+    "static/css/main.36fae83f.chunk.css",
     "static/js/main.6d66b3fa.chunk.js"
   ]
 }
