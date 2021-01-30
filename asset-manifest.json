@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "/ai-metrics/static/css/main.394a71d0.chunk.css",
-    "main.js": "/ai-metrics/static/js/main.bfabe813.chunk.js",
-    "main.js.map": "/ai-metrics/static/js/main.bfabe813.chunk.js.map",
-    "runtime-main.js": "/ai-metrics/static/js/runtime-main.09b82d84.js",
-    "runtime-main.js.map": "/ai-metrics/static/js/runtime-main.09b82d84.js.map",
-    "static/css/2.bd3b39c8.chunk.css": "/ai-metrics/static/css/2.bd3b39c8.chunk.css",
-    "static/js/2.ca567597.chunk.js": "/ai-metrics/static/js/2.ca567597.chunk.js",
-    "static/js/2.ca567597.chunk.js.map": "/ai-metrics/static/js/2.ca567597.chunk.js.map",
-    "static/js/3.711c32ee.chunk.js": "/ai-metrics/static/js/3.711c32ee.chunk.js",
-    "static/js/3.711c32ee.chunk.js.map": "/ai-metrics/static/js/3.711c32ee.chunk.js.map",
-    "index.html": "/ai-metrics/index.html",
-    "static/css/2.bd3b39c8.chunk.css.map": "/ai-metrics/static/css/2.bd3b39c8.chunk.css.map",
-    "static/css/main.394a71d0.chunk.css.map": "/ai-metrics/static/css/main.394a71d0.chunk.css.map",
-    "static/js/2.ca567597.chunk.js.LICENSE.txt": "/ai-metrics/static/js/2.ca567597.chunk.js.LICENSE.txt",
-    "static/media/App.css": "/ai-metrics/static/media/background.31263592.jpg",
-    "static/media/font-awesome.min.css": "/ai-metrics/static/media/fontawesome-webfont.f691f37e.woff"
+    "main.css": "/medimetrics.no/static/css/main.433e7c48.chunk.css",
+    "main.js": "/medimetrics.no/static/js/main.6d66b3fa.chunk.js",
+    "main.js.map": "/medimetrics.no/static/js/main.6d66b3fa.chunk.js.map",
+    "runtime-main.js": "/medimetrics.no/static/js/runtime-main.4964f46a.js",
+    "runtime-main.js.map": "/medimetrics.no/static/js/runtime-main.4964f46a.js.map",
+    "static/css/2.60c921d9.chunk.css": "/medimetrics.no/static/css/2.60c921d9.chunk.css",
+    "static/js/2.12b8c9c5.chunk.js": "/medimetrics.no/static/js/2.12b8c9c5.chunk.js",
+    "static/js/2.12b8c9c5.chunk.js.map": "/medimetrics.no/static/js/2.12b8c9c5.chunk.js.map",
+    "static/js/3.c74799b3.chunk.js": "/medimetrics.no/static/js/3.c74799b3.chunk.js",
+    "static/js/3.c74799b3.chunk.js.map": "/medimetrics.no/static/js/3.c74799b3.chunk.js.map",
+    "index.html": "/medimetrics.no/index.html",
+    "static/css/2.60c921d9.chunk.css.map": "/medimetrics.no/static/css/2.60c921d9.chunk.css.map",
+    "static/css/main.433e7c48.chunk.css.map": "/medimetrics.no/static/css/main.433e7c48.chunk.css.map",
+    "static/js/2.12b8c9c5.chunk.js.LICENSE.txt": "/medimetrics.no/static/js/2.12b8c9c5.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/medimetrics.no/static/media/background.31263592.jpg",
+    "static/media/font-awesome.min.css": "/medimetrics.no/static/media/fontawesome-webfont.f691f37e.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.09b82d84.js",
-    "static/css/2.bd3b39c8.chunk.css",
-    "static/js/2.ca567597.chunk.js",
-    "static/css/main.394a71d0.chunk.css",
-    "static/js/main.bfabe813.chunk.js"
+    "static/js/runtime-main.4964f46a.js",
+    "static/css/2.60c921d9.chunk.css",
+    "static/js/2.12b8c9c5.chunk.js",
+    "static/css/main.433e7c48.chunk.css",
+    "static/js/main.6d66b3fa.chunk.js"
   ]
 }
