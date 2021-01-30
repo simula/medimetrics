@@ -33,4 +33,45 @@ const schema = {
   npvLock: Joi.boolean(),
   thsLock: Joi.boolean(),
 };
-export { schema };
+const disableFormButton = (
+  state = {
+    err: {
+      ts: "",
+      ps: "",
+      ns: "",
+      tp: "",
+      fn: "",
+      fp: "",
+      tn: "",
+      rc: "",
+      f1: "",
+      prc: "",
+      acc: "",
+      mcc: "",
+      npv: "",
+      spf: "",
+      ths: "",
+    },
+  }
+) => {
+  return state.err &&
+    (state.err.ts ||
+      state.err.ps ||
+      state.err.ns ||
+      state.err.tp ||
+      state.err.fn ||
+      state.err.fp ||
+      state.err.tn ||
+      state.err.rc ||
+      state.err.prc ||
+      state.err.f1 ||
+      state.err.acc ||
+      state.err.mcc ||
+      state.err.npv ||
+      state.err.spf ||
+      state.err.ths)
+    ? true
+    : false;
+};
+
+export { schema, disableFormButton };

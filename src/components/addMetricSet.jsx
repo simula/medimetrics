@@ -7,7 +7,8 @@ import ReactTooltip from "react-tooltip";
 import { reducer } from "../utils/formLogic";
 import { actions } from "../utils/actions";
 import { refs } from "../utils/refs";
-import { schema } from "../utils/validation";
+import { schema, disableFormButton } from "../utils/validation";
+import { precision3 } from "../utils/metricsExtraction";
 import {
   invalidInputError,
   duplicateLabelError,
@@ -305,7 +306,7 @@ const AddMetricSet = ({ history }) => {
             onChange={(e) =>
               dispatch({ type: actions.ADD_RC, payload: +e.target.value })
             }
-            value={recallFormula(state) || state.rc || ""}
+            value={precision3(recallFormula(state)) || state.rc || ""}
             debounceTimeout={1000}
             name="rc"
           />
@@ -326,7 +327,7 @@ const AddMetricSet = ({ history }) => {
             onChange={(e) =>
               dispatch({ type: actions.ADD_PRC, payload: +e.target.value })
             }
-            value={precisionFormula(state) || state.prc || ""}
+            value={precision3(precisionFormula(state)) || state.prc || ""}
             debounceTimeout={1000}
             name="prc"
           />
@@ -347,7 +348,7 @@ const AddMetricSet = ({ history }) => {
             onChange={(e) =>
               dispatch({ type: actions.ADD_F1, payload: +e.target.value })
             }
-            value={f1ScoreFormula(state) || state.f1 || ""}
+            value={precision3(f1ScoreFormula(state)) || state.f1 || ""}
             debounceTimeout={1000}
             name="f1"
           />
@@ -368,7 +369,7 @@ const AddMetricSet = ({ history }) => {
             onChange={(e) =>
               dispatch({ type: actions.ADD_ACC, payload: +e.target.value })
             }
-            value={accuracyFormula(state) || state.acc || ""}
+            value={precision3(accuracyFormula(state)) || state.acc || ""}
             debounceTimeout={1000}
             name="acc"
           />
@@ -393,7 +394,7 @@ const AddMetricSet = ({ history }) => {
             onChange={(e) =>
               dispatch({ type: actions.ADD_MCC, payload: +e.target.value })
             }
-            value={mccFormula(state) || state.mcc || ""}
+            value={precision3(mccFormula(state)) || state.mcc || ""}
             debounceTimeout={1000}
             name="mcc"
           />
@@ -415,7 +416,7 @@ const AddMetricSet = ({ history }) => {
             onChange={(e) =>
               dispatch({ type: actions.ADD_NPV, payload: +e.target.value })
             }
-            value={npvFormula(state) || state.npv || ""}
+            value={precision3(npvFormula(state)) || state.npv || ""}
             debounceTimeout={1000}
             name="npv"
           />
@@ -437,7 +438,7 @@ const AddMetricSet = ({ history }) => {
             onChange={(e) =>
               dispatch({ type: actions.ADD_SPF, payload: +e.target.value })
             }
-            value={spfFormula(state) || state.spf || ""}
+            value={precision3(spfFormula(state)) || state.spf || ""}
             debounceTimeout={1000}
             name="spf"
           />
@@ -459,13 +460,17 @@ const AddMetricSet = ({ history }) => {
             onChange={(e) =>
               dispatch({ type: actions.ADD_THS, payload: +e.target.value })
             }
-            value={thsFormula(state) || state.ths || ""}
+            value={precision3(thsFormula(state)) || state.ths || ""}
             debounceTimeout={1000}
             name="ths"
           />
         </div>
 
-        <button className="btn" id="submit-metric-button" type="submit">
+        <button
+          disabled={disableFormButton(state)}
+          className="btn"
+          id="submit-metric-button"
+          type="submit">
           Evaluate
         </button>
       </form>

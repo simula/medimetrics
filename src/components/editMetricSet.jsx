@@ -6,29 +6,26 @@ import { datatips } from "../utils/tooltips";
 import ReactTooltip from "react-tooltip";
 import { reducer } from "../utils/editFormLogic";
 import { convertData } from "../utils/metricsExtraction";
-import { schema } from "../utils/validation";
+import { schema, disableFormButton } from "../utils/validation";
+import { precision3 } from "../utils/metricsExtraction";
+import { refs } from "../utils/refs";
+import { actions } from "../utils/actions";
+import {
+  recallFormula,
+  precisionFormula,
+  f1ScoreFormula,
+  accuracyFormula,
+  mccFormula,
+  npvFormula,
+  spfFormula,
+  thsFormula,
+} from "../utils/formulas";
 
 import {
   invalidInputError,
   duplicateLabelError,
   inputConflictError,
 } from "../utils/toasts";
-const ADD_TS = "ADD_TS";
-const ADD_PS = "ADD_PS";
-const ADD_NS = "ADD_NS";
-const ADD_TP = "ADD_TP";
-const ADD_FP = "ADD_FP";
-const ADD_TN = "ADD_TN";
-const ADD_FN = "ADD_FN";
-const ADD_RC = "ADD_RC";
-const ADD_PRC = "ADD_PRC";
-const ADD_F1 = "ADD_F1";
-const ADD_ACC = "ADD_ACC";
-const ADD_MCC = "ADD_MCC";
-const ADD_LBL = "ADD_LBL";
-const ADD_NPV = "ADD_NPV";
-const ADD_SPF = "ADD_SPF";
-const ADD_THS = "ADD_THS";
 
 const initialize = () => {
   const methods = JSON.parse(sessionStorage.getItem("methods"));
@@ -89,65 +86,7 @@ const EditMetricSet = ({ history }) => {
       inputConflictError(state.err);
     }
   });
-  const recall = React.createRef();
-  const precision = React.createRef();
-  const f1Score = React.createRef();
-  const accuracy = React.createRef();
-  const matthewsCorrelationCoefficient = React.createRef();
-  const specificity = React.createRef();
-  const negativePredictiveValue = React.createRef();
-  const threatScore = React.createRef();
 
-  const recallFormula = () => {
-    return state.tp > 0 && state.fn > 0
-      ? state.tp / (state.tp + state.fn)
-      : null;
-  };
-
-  const precisionFormula = () => {
-    return state.tp > 0 && state.fp > 0
-      ? state.tp / (state.tp + state.fp)
-      : null;
-  };
-  const f1ScoreFormula = () => {
-    return state.tp > 0 && state.fn > 0 && state.fp > 0
-      ? (2 * state.tp) / (2 * state.tp + state.fn + state.fp)
-      : null;
-  };
-  const accuracyFormula = () => {
-    return state.tp > 0 && state.tn > 0 && state.fp > 0 && state.fn > 0
-      ? (state.tp + state.tn) / (state.tp + state.tn + state.fp + state.fn)
-      : null;
-  };
-
-  const mccFormula = () => {
-    return state.tp > 0 && state.tn > 0 && state.fp > 0 && state.fn > 0
-      ? (state.tp * state.tn - state.fp * state.fn) /
-          Math.sqrt(
-            (state.tp + state.fp) *
-              (state.tp + state.fn) *
-              (state.tn + state.fp) *
-              (state.tn + state.fn)
-          )
-      : null;
-  };
-  const npvFormula = () => {
-    return state.tn > 0 && state.fn > 0
-      ? state.tn / (state.tn + state.fn)
-      : null;
-  };
-
-  const spfFormula = () => {
-    return state.tn > 0 && state.fp > 0
-      ? state.tn / (state.tn + state.fp)
-      : null;
-  };
-
-  const thsFormula = () => {
-    return state.tp > 0 && state.fn > 0 && state.fp > 0
-      ? state.tp / (state.tp + state.fp + state.fn)
-      : null;
-  };
   const onSubmit = (e) => {
     e.preventDefault();
     const errors = Joi.validate(state, schema, { abortEarly: false });
@@ -164,17 +103,17 @@ const EditMetricSet = ({ history }) => {
         fp: state.fp,
         tn: state.tn,
         fn: state.fn,
-        rc: parseFloat(recall.current.defaultValue, 10),
-        prc: parseFloat(precision.current.defaultValue, 10),
-        f1: parseFloat(f1Score.current.defaultValue, 10),
-        acc: parseFloat(accuracy.current.defaultValue, 10),
+        rc: parseFloat(refs.recall.current.defaultValue, 10),
+        prc: parseFloat(refs.precision.current.defaultValue, 10),
+        f1: parseFloat(refs.f1Score.current.defaultValue, 10),
+        acc: parseFloat(refs.accuracy.current.defaultValue, 10),
         mcc: parseFloat(
-          matthewsCorrelationCoefficient.current.defaultValue,
+          refs.matthewsCorrelationCoefficient.current.defaultValue,
           10
         ),
-        spf: parseFloat(specificity.current.defaultValue, 10),
-        npv: parseFloat(negativePredictiveValue.current.defaultValue, 10),
-        ths: parseFloat(threatScore.current.defaultValue, 10),
+        spf: parseFloat(refs.specificity.current.defaultValue, 10),
+        npv: parseFloat(refs.negativePredictiveValue.current.defaultValue, 10),
+        ths: parseFloat(refs.threatScore.current.defaultValue, 10),
       };
       let retrievedMethods = JSON.parse(sessionStorage.getItem("methods"));
       if (retrievedMethods) {
@@ -232,7 +171,7 @@ const EditMetricSet = ({ history }) => {
           <DebounceInput
             className="form-input"
             onChange={(e) =>
-              dispatch({ type: ADD_LBL, payload: e.target.value })
+              dispatch({ type: actions.ADD_LBL, payload: e.target.value })
             }
             value={state.lbl || ""}
             debounceTimeout={1000}
@@ -248,7 +187,7 @@ const EditMetricSet = ({ history }) => {
                 (state.ts < 0 && " form-input negative-error ") || "form-input"
               }
               onChange={(e) =>
-                dispatch({ type: ADD_TS, payload: +e.target.value })
+                dispatch({ type: actions.ADD_TS, payload: +e.target.value })
               }
               value={state.ts || ""}
               debounceTimeout={1000}
@@ -264,7 +203,7 @@ const EditMetricSet = ({ history }) => {
                 (state.ps < 0 && " form-input negative-error ") || "form-input"
               }
               onChange={(e) =>
-                dispatch({ type: ADD_PS, payload: +e.target.value })
+                dispatch({ type: actions.ADD_PS, payload: +e.target.value })
               }
               value={state.ps || ""}
               debounceTimeout={1000}
@@ -280,7 +219,7 @@ const EditMetricSet = ({ history }) => {
                 (state.ns < 0 && " form-input negative-error ") || "form-input"
               }
               onChange={(e) =>
-                dispatch({ type: ADD_NS, payload: +e.target.value })
+                dispatch({ type: actions.ADD_NS, payload: +e.target.value })
               }
               value={state.ns || ""}
               debounceTimeout={1000}
@@ -302,7 +241,7 @@ const EditMetricSet = ({ history }) => {
                 (state.tp < 0 && " form-input negative-error ") || "form-input"
               }
               onChange={(e) =>
-                dispatch({ type: ADD_TP, payload: +e.target.value })
+                dispatch({ type: actions.ADD_TP, payload: +e.target.value })
               }
               value={state.tp || ""}
               debounceTimeout={1000}
@@ -323,7 +262,7 @@ const EditMetricSet = ({ history }) => {
                 (state.fn < 0 && " form-input negative-error ") || "form-input"
               }
               onChange={(e) =>
-                dispatch({ type: ADD_FN, payload: +e.target.value })
+                dispatch({ type: actions.ADD_FN, payload: +e.target.value })
               }
               value={state.fn || ""}
               debounceTimeout={1000}
@@ -344,7 +283,7 @@ const EditMetricSet = ({ history }) => {
                 (state.tn < 0 && " form-input negative-error ") || "form-input"
               }
               onChange={(e) =>
-                dispatch({ type: ADD_TN, payload: +e.target.value })
+                dispatch({ type: actions.ADD_TN, payload: +e.target.value })
               }
               value={state.tn || ""}
               debounceTimeout={1000}
@@ -364,7 +303,7 @@ const EditMetricSet = ({ history }) => {
                 (state.fp < 0 && " form-input negative-error ") || "form-input"
               }
               onChange={(e) =>
-                dispatch({ type: ADD_FP, payload: +e.target.value })
+                dispatch({ type: actions.ADD_FP, payload: +e.target.value })
               }
               value={state.fp || ""}
               debounceTimeout={1000}
@@ -381,14 +320,14 @@ const EditMetricSet = ({ history }) => {
           </label>
           <DebounceInput
             disabled={state.rcLock}
-            inputRef={recall}
+            inputRef={refs.recall}
             className={
               (state.rc < 0 && " form-input negative-error ") || "form-input"
             }
             onChange={(e) =>
-              dispatch({ type: ADD_RC, payload: +e.target.value })
+              dispatch({ type: actions.ADD_RC, payload: +e.target.value })
             }
-            value={recallFormula() || state.rc || ""}
+            value={precision3(recallFormula(state)) || state.rc || ""}
             debounceTimeout={1000}
             name="rc"
           />
@@ -402,14 +341,14 @@ const EditMetricSet = ({ history }) => {
           </label>
           <DebounceInput
             disabled={state.prcLock}
-            inputRef={precision}
+            inputRef={refs.precision}
             className={
               (state.prc < 0 && " form-input negative-error ") || "form-input"
             }
             onChange={(e) =>
-              dispatch({ type: ADD_PRC, payload: +e.target.value })
+              dispatch({ type: actions.ADD_PRC, payload: +e.target.value })
             }
-            value={precisionFormula() || state.prc || ""}
+            value={precision3(precisionFormula(state)) || state.prc || ""}
             debounceTimeout={1000}
             name="prc"
           />
@@ -423,14 +362,14 @@ const EditMetricSet = ({ history }) => {
           </label>
           <DebounceInput
             disabled={state.f1Lock}
-            inputRef={f1Score}
+            inputRef={refs.f1Score}
             className={
               (state.f1 < 0 && " form-input negative-error ") || "form-input"
             }
             onChange={(e) =>
-              dispatch({ type: ADD_F1, payload: +e.target.value })
+              dispatch({ type: actions.ADD_F1, payload: +e.target.value })
             }
-            value={f1ScoreFormula() || state.f1 || ""}
+            value={precision3(f1ScoreFormula(state)) || state.f1 || ""}
             debounceTimeout={1000}
             name="f1"
           />
@@ -444,15 +383,14 @@ const EditMetricSet = ({ history }) => {
           </label>
           <DebounceInput
             disabled={state.accLock}
-            inputRef={accuracy}
+            inputRef={refs.accuracy}
             className={
               (state.acc < 0 && " form-input negative-error ") || "form-input"
             }
             onChange={(e) =>
-              dispatch({ type: ADD_ACC, payload: +e.target.value })
+              dispatch({ type: actions.ADD_ACC, payload: +e.target.value })
             }
-            value={accuracyFormula() || state.acc || ""}
-            debounceTimeout={1000}
+            value={precision3(accuracyFormula(state)) || state.acc || ""}
             name="acc"
           />
         </div>
@@ -466,7 +404,7 @@ const EditMetricSet = ({ history }) => {
           </label>
           <DebounceInput
             disabled={state.mccLock}
-            inputRef={matthewsCorrelationCoefficient}
+            inputRef={refs.matthewsCorrelationCoefficient}
             className={
               (state.mcc < -1 &&
                 state.mcc > 1 &&
@@ -474,9 +412,9 @@ const EditMetricSet = ({ history }) => {
               "form-input"
             }
             onChange={(e) =>
-              dispatch({ type: ADD_MCC, payload: +e.target.value })
+              dispatch({ type: actions.ADD_MCC, payload: +e.target.value })
             }
-            value={mccFormula() || state.mcc || ""}
+            value={precision3(mccFormula(state)) || state.mcc || ""}
             debounceTimeout={1000}
             name="mcc"
           />
@@ -491,14 +429,14 @@ const EditMetricSet = ({ history }) => {
           </label>
           <DebounceInput
             disabled={state.npvLock}
-            inputRef={negativePredictiveValue}
+            inputRef={refs.negativePredictiveValue}
             className={
               (state.npv < 0 && " form-input negative-error ") || "form-input"
             }
             onChange={(e) =>
-              dispatch({ type: ADD_NPV, payload: +e.target.value })
+              dispatch({ type: actions.ADD_NPV, payload: +e.target.value })
             }
-            value={npvFormula() || state.npv || ""}
+            value={precision3(npvFormula(state)) || state.npv || ""}
             debounceTimeout={1000}
             name="npv"
           />
@@ -513,14 +451,14 @@ const EditMetricSet = ({ history }) => {
           </label>
           <DebounceInput
             disabled={state.spfLock}
-            inputRef={specificity}
+            inputRef={refs.specificity}
             className={
               (state.spc < 0 && " form-input negative-error ") || "form-input"
             }
             onChange={(e) =>
-              dispatch({ type: ADD_SPF, payload: +e.target.value })
+              dispatch({ type: actions.ADD_SPF, payload: +e.target.value })
             }
-            value={spfFormula() || state.spf || ""}
+            value={precision3(spfFormula(state)) || state.spf || ""}
             debounceTimeout={1000}
             name="spf"
           />
@@ -535,20 +473,24 @@ const EditMetricSet = ({ history }) => {
           </label>
           <DebounceInput
             disabled={state.thsLock}
-            inputRef={threatScore}
+            inputRef={refs.threatScore}
             className={
               (state.ths < 0 && " form-input negative-error ") || "form-input"
             }
             onChange={(e) =>
-              dispatch({ type: ADD_THS, payload: +e.target.value })
+              dispatch({ type: actions.ADD_THS, payload: +e.target.value })
             }
-            value={thsFormula() || state.ths || ""}
+            value={precision3(thsFormula(state)) || state.ths || ""}
             debounceTimeout={1000}
             name="ths"
           />
         </div>
 
-        <button className="btn" id="submit-metric-button" type="submit">
+        <button
+          disabled={disableFormButton(state)}
+          className="btn"
+          id="submit-metric-button"
+          type="submit">
           Save changes
         </button>
       </form>

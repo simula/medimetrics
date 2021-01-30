@@ -370,7 +370,7 @@ const Home = ({ history }) => {
           </div>
         </div>
       )}
-      <Footer text={` Simula Research Laboratory 2021`} />
+      <Footer text={` SimulaMet 2021`} />
     </div>
   );
 };

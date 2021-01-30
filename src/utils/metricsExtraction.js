@@ -34,13 +34,16 @@ const extractAccuracy = (data) => {
   return acc;
 };
 const extractMCC = (data) => {
+  console.log("hh");
   const mcc = {
     metric: "N-MCC",
   };
   data.map(
     (element) =>
       (mcc[element.lbl] =
-        Math.round(((element.mcc + 1) / 2 + Number.EPSILON) * 1000) / 1000)
+        element.mcc < 0
+          ? precision3((parseFloat(element.mcc, 10) + 1) / 2)
+          : precision3(parseFloat(element.mcc, 10)))
   );
   return mcc;
 };
@@ -81,6 +84,10 @@ const processDataForChart = (data) => {
   return metrics;
 };
 
+const precision3 = (float) => {
+  return float && Number.parseFloat(float).toFixed(3);
+};
+
 const convertData = (method) => {
   return {
     lbl: method.lbl,
@@ -91,15 +98,15 @@ const convertData = (method) => {
     tn: method.tn,
     fp: method.fp,
     fn: method.fn,
-    mcc: Math.round((method.mcc + Number.EPSILON) * 1000) / 1000 || 0,
-    f1: Math.round((method.f1 + Number.EPSILON) * 1000) / 1000 || 0,
-    rc: Math.round((method.rc + Number.EPSILON) * 1000) / 1000 || 0,
-    prc: Math.round((method.prc + Number.EPSILON) * 1000) / 1000 || 0,
-    acc: Math.round((method.acc + Number.EPSILON) * 1000) / 1000 || 0,
-    spf: Math.round((method.spf + Number.EPSILON) * 1000) / 1000 || 0,
-    npv: Math.round((method.npv + Number.EPSILON) * 1000) / 1000 || 0,
-    ths: Math.round((method.ths + Number.EPSILON) * 1000) / 1000 || 0,
+    mcc: precision3(method.mcc) || 0,
+    f1: precision3(method.f1) || 0,
+    rc: precision3(method.rc) || 0,
+    prc: precision3(method.prc) || 0,
+    acc: precision3(method.acc) || 0,
+    spf: precision3(method.spf) || 0,
+    npv: precision3(method.npv) || 0,
+    ths: precision3(method.ths) || 0,
   };
 };
 
-export { processDataForChart, extractLabels, convertData };
+export { processDataForChart, extractLabels, convertData, precision3 };

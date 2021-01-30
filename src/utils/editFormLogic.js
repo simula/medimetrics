@@ -1,4 +1,7 @@
 import { actions } from "./actions";
+const reg = new RegExp("^[0-9]+$");
+const metricReg = new RegExp("[+-]?([0-9]*[.])?[0-9]+");
+
 const reducer = (state, action) => {
   switch (action.type) {
     case actions.ADD_LBL:
@@ -34,6 +37,7 @@ const reducer = (state, action) => {
         };
       } else if (
         action.payload < 0 ||
+        !reg.test(action.payload.toString()) ||
         (state.ps && action.payload < state.ps) ||
         (state.ns && action.payload < state.ns) ||
         (state.tp && action.payload < state.tp) ||
@@ -127,7 +131,9 @@ const reducer = (state, action) => {
               ? 0
               : state.ps && state.fn
               ? state.ps - state.fn
-              : state.fn && state.tn && state.fp
+              : state.fn &&
+                state.tn &&
+                state.fp + (state.fn + state.tn + state.fp <= action.payload)
               ? action.payload - (state.fn + state.tn + state.fp)
               : state.ns && state.fn
               ? action.payload - (state.ns + state.fn)
@@ -140,7 +146,10 @@ const reducer = (state, action) => {
               ? 0
               : state.ps && state.tp
               ? state.ps - state.tp
-              : state.tp && state.tn && state.fp
+              : state.tp &&
+                state.tn &&
+                state.fp &&
+                state.tp + state.tn + state.fp <= action.payload
               ? action.payload - (state.tp + state.tn + state.fp)
               : state.ns && state.tp
               ? action.payload - (state.ns + state.tp)
@@ -152,7 +161,10 @@ const reducer = (state, action) => {
               ? 0
               : state.ns && state.fp
               ? state.ns - state.fp
-              : state.tp && state.fp && state.fn
+              : state.tp &&
+                state.fp &&
+                state.fn &&
+                state.tp + state.fp + state.fn <= action.payload
               ? action.payload - (state.tp + state.fp + state.fn)
               : state.ps && state.fp
               ? action.payload - (state.ps + state.fp)
@@ -165,7 +177,10 @@ const reducer = (state, action) => {
               ? 0
               : state.ns && state.tn
               ? state.ns - state.tn
-              : state.tp && state.tn && state.fn
+              : state.tp &&
+                state.tn &&
+                state.fn &&
+                state.tp + state.tn + state.fn <= action.payload
               ? action.payload - (state.tp + state.tn + state.fn)
               : state.ps && state.tn
               ? action.payload - (state.ps + state.tn)
@@ -173,6 +188,31 @@ const reducer = (state, action) => {
         };
     case actions.ADD_PS:
       if (
+        action.payload < 0 ||
+        !reg.test(action.payload.toString()) ||
+        (state.ts && action.payload > state.ts) ||
+        (state.tp && action.payload > 0 && action.payload < state.tp) ||
+        (state.fn && action.payload > 0 && action.payload < state.fn)
+      ) {
+        return {
+          ...state,
+          err: { ps: "Invalid input for Positive samples" },
+          tsLock: true,
+          nsLock: true,
+          tpLock: true,
+          fpLock: true,
+          tnLock: true,
+          fnLock: true,
+          rcLock: true,
+          prcLock: true,
+          f1Lock: true,
+          accLock: true,
+          mccLock: true,
+          spfLock: true,
+          npvLock: true,
+          thsLock: true,
+        };
+      } else if (
         (state.tp > 0 &&
           state.fn > 0 &&
           action.payload !== state.tp + state.fn) ||
@@ -211,30 +251,6 @@ const reducer = (state, action) => {
               ? { conflict: "Input conflict" }
               : { conflict: "" },
         };
-      } else if (
-        action.payload <= 0 ||
-        (state.ts && action.payload > state.ts) ||
-        (state.tp && action.payload < state.tp) ||
-        (state.fn && action.payload < state.fn)
-      ) {
-        return {
-          ...state,
-          err: { ps: "Invalid input for Positive samples" },
-          tsLock: true,
-          nsLock: true,
-          tpLock: true,
-          fpLock: true,
-          tnLock: true,
-          fnLock: true,
-          rcLock: true,
-          prcLock: true,
-          f1Lock: true,
-          accLock: true,
-          mccLock: true,
-          spfLock: true,
-          npvLock: true,
-          thsLock: true,
-        };
       } else
         return {
           ...state,
@@ -256,7 +272,7 @@ const reducer = (state, action) => {
           ps: action.payload,
           lbl: state.lbl,
           /* Total samples */
-          ts: state.ns ? state.ns + action.payload : state.ts,
+          ts: state.ns && state.ns >= 0 ? state.ns + action.payload : state.ts,
 
           /* Negative Samples */
           ns: state.ns
@@ -386,6 +402,32 @@ const reducer = (state, action) => {
         };
     case actions.ADD_NS:
       if (
+        action.payload < 0 ||
+        !reg.test(action.payload.toString()) ||
+        (state.ts && action.payload > state.ts) ||
+        (state.tn && action.payload > 0 && action.payload < state.tn) ||
+        (state.fp && action.payload > 0 && action.payload < state.fp)
+      ) {
+        return {
+          ...state,
+          ns: action.payload,
+          err: { ns: "Invalid input for Negative samples" },
+          tsLock: true,
+          psLock: true,
+          tpLock: true,
+          fpLock: true,
+          tnLock: true,
+          fnLock: true,
+          rcLock: true,
+          prcLock: true,
+          f1Lock: true,
+          accLock: true,
+          mccLock: true,
+          spfLock: true,
+          npvLock: true,
+          thsLock: true,
+        };
+      } else if (
         (state.tn > 0 &&
           state.fp > 0 &&
           action.payload !== state.tn + state.fp) ||
@@ -424,31 +466,6 @@ const reducer = (state, action) => {
               ? { conflict: "Input conflict" }
               : { conflict: "" },
         };
-      } else if (
-        action.payload <= 0 ||
-        (state.ts && action.payload > state.ts) ||
-        (state.fp && action.payload < state.fp) ||
-        (state.tn && action.payload < state.tn)
-      ) {
-        return {
-          ...state,
-          ns: action.payload,
-          err: { ns: "Invalid input for Negative samples" },
-          tsLock: true,
-          psLock: true,
-          tpLock: true,
-          fpLock: true,
-          tnLock: true,
-          fnLock: true,
-          rcLock: true,
-          prcLock: true,
-          f1Lock: true,
-          accLock: true,
-          mccLock: true,
-          spfLock: true,
-          npvLock: true,
-          thsLock: true,
-        };
       } else
         return {
           ...state,
@@ -470,7 +487,7 @@ const reducer = (state, action) => {
           ns: action.payload,
           lbl: state.lbl,
           /* Total samples */
-          ts: state.ps ? state.ps + action.payload : state.ts,
+          ts: state.ps && state.ps >= 0 ? state.ps + action.payload : state.ts,
 
           /* Negative Samples */
           ps: state.ps
@@ -586,8 +603,10 @@ const reducer = (state, action) => {
             : state.spf,
         };
     case actions.ADD_TP:
+      console.log(state.ps);
       if (
         action.payload < 0 ||
+        !reg.test(action.payload.toString()) ||
         (state.ts && action.payload > state.ts) ||
         (state.ps && action.payload > state.ps)
       ) {
@@ -658,7 +677,10 @@ const reducer = (state, action) => {
         fn:
           state.ps && action.payload <= state.ps
             ? state.ps - action.payload
-            : state.ts && state.tn && state.fp
+            : state.ts &&
+              state.tn &&
+              state.fp &&
+              action.payload + state.tn + state.fp <= state.ts
             ? state.ts - (action.payload + state.tn + state.fp)
             : state.fn,
 
@@ -759,6 +781,7 @@ const reducer = (state, action) => {
     case actions.ADD_FN:
       if (
         action.payload < 0 ||
+        !reg.test(action.payload.toString()) ||
         (state.ts && action.payload > state.ts) ||
         (state.ps && action.payload > state.ps)
       ) {
@@ -828,7 +851,10 @@ const reducer = (state, action) => {
         tp:
           state.ps && action.payload <= state.ps
             ? state.ps - action.payload
-            : state.ts && state.tn && state.fp
+            : state.ts &&
+              state.tn &&
+              state.fp &&
+              action.payload + state.tn + state.fp <= state.ts
             ? state.ts - (action.payload + state.tn + state.fp)
             : state.tp,
 
@@ -923,6 +949,7 @@ const reducer = (state, action) => {
     case actions.ADD_FP:
       if (
         action.payload < 0 ||
+        !reg.test(action.payload.toString()) ||
         (state.ts && action.payload > state.ts) ||
         (state.ns && action.payload > state.ns)
       ) {
@@ -969,7 +996,10 @@ const reducer = (state, action) => {
         tn:
           state.ns && action.payload <= state.ns
             ? state.ns - action.payload
-            : state.ts && state.tp && state.fn
+            : state.ts &&
+              state.tp &&
+              state.fn &&
+              action.payload + state.tp + state.fn <= state.ts
             ? state.ts - (action.payload + state.tp + state.fn)
             : state.tn,
 
@@ -1091,6 +1121,7 @@ const reducer = (state, action) => {
     case actions.ADD_TN:
       if (
         action.payload < 0 ||
+        !reg.test(action.payload.toString()) ||
         (state.ts && action.payload > state.ts) ||
         (state.ns && action.payload > state.ns)
       ) {
@@ -1136,7 +1167,10 @@ const reducer = (state, action) => {
         fp:
           state.ns && action.payload <= state.ns
             ? state.ns - action.payload
-            : state.ts && state.tp && state.fn
+            : state.ts &&
+              state.tp &&
+              state.fn &&
+              action.payload + state.tp + state.fn <= state.ts
             ? state.ts - (action.payload + state.tp + state.fn)
             : state.fp,
 
@@ -1268,9 +1302,46 @@ const reducer = (state, action) => {
             : state.ths,
       };
     case actions.ADD_RC:
+      if (
+        action.payload < 0 ||
+        action.payload > 1 ||
+        !metricReg.test(action.payload.toString())
+      )
+        return {
+          ...state,
+          err: { rc: "Invalid input for recall" },
+          tsLock: true,
+          psLock: true,
+          nsLock: true,
+          tpLock: true,
+          fnLock: true,
+          fpLock: true,
+          tnLock: true,
+          prcLock: true,
+          f1Lock: true,
+          accLock: true,
+          mccLock: true,
+          spfLock: true,
+          npvLock: true,
+          thsLock: true,
+        };
       return {
         ...state,
-        err: "",
+        err: { rc: "" },
+        tsLock: false,
+        psLock: false,
+        nsLock: false,
+        tpLock: false,
+        fnLock: false,
+        fpLock: false,
+        tnLock: false,
+        prcLock: false,
+        f1Lock: false,
+        accLock: false,
+        mccLock: false,
+        spfLock: false,
+        npvLock: false,
+        thsLock: false,
         rc: action.payload,
         lbl: state.lbl,
         f1: state.prc
@@ -1282,8 +1353,46 @@ const reducer = (state, action) => {
           : state.fn,
       };
     case actions.ADD_PRC:
+      if (
+        action.payload < 0 ||
+        action.payload > 1 ||
+        !metricReg.test(action.payload.toString())
+      )
+        return {
+          ...state,
+          err: { prc: "Invalid input for precision" },
+          tsLock: true,
+          psLock: true,
+          nsLock: true,
+          tpLock: true,
+          fnLock: true,
+          tnLock: true,
+          fpLock: true,
+          rcLock: true,
+          f1Lock: true,
+          accLock: true,
+          mccLock: true,
+          spfLock: true,
+          npvLock: true,
+          thsLock: true,
+        };
       return {
         ...state,
+        err: { prc: "" },
+        tsLock: false,
+        psLock: false,
+        nsLock: false,
+        tpLock: false,
+        fpLock: false,
+        fnLock: false,
+        tnLock: false,
+        rcLock: false,
+        f1Lock: false,
+        accLock: false,
+        mccLock: false,
+        spfLock: false,
+        npvLock: false,
+        thsLock: false,
         prc: action.payload,
         lbl: state.lbl,
         f1: state.rc
@@ -1299,19 +1408,272 @@ const reducer = (state, action) => {
       };
 
     case actions.ADD_F1:
-      return { ...state, f1: action.payload, lbl: state.lbl };
+      if (
+        action.payload < 0 ||
+        action.payload > 1 ||
+        !metricReg.test(action.payload.toString())
+      )
+        return {
+          ...state,
+          err: { f1: "Invalid input for F1 score" },
+          tsLock: true,
+          psLock: true,
+          nsLock: true,
+          tpLock: true,
+          fnLock: true,
+          tnLock: true,
+          fpLock: true,
+          rcLock: true,
+          prcLock: true,
+          accLock: true,
+          mccLock: true,
+          spfLock: true,
+          npvLock: true,
+          thsLock: true,
+        };
+      return {
+        ...state,
+        err: { f1: "" },
+        tsLock: false,
+        psLock: false,
+        nsLock: false,
+        fpLock: false,
+        tpLock: false,
+        fnLock: false,
+        tnLock: false,
+        rcLock: false,
+        prcLock: false,
+        accLock: false,
+        mccLock: false,
+        spfLock: false,
+        npvLock: false,
+        thsLock: false,
+        f1: action.payload,
+        lbl: state.lbl,
+      };
 
     case actions.ADD_ACC:
-      return { ...state, acc: action.payload, lbl: state.lbl };
-
+      if (
+        action.payload < 0 ||
+        action.payload > 1 ||
+        !metricReg.test(action.payload.toString())
+      )
+        return {
+          ...state,
+          err: { acc: "Invalid input for accuracy" },
+          tsLock: true,
+          psLock: true,
+          nsLock: true,
+          tpLock: true,
+          fnLock: true,
+          fpLock: true,
+          tnLock: true,
+          rcLock: true,
+          prcLock: true,
+          f1Lock: true,
+          mccLock: true,
+          spfLock: true,
+          npvLock: true,
+          thsLock: true,
+        };
+      return {
+        ...state,
+        err: { acc: "" },
+        tsLock: false,
+        psLock: false,
+        nsLock: false,
+        tpLock: false,
+        fnLock: false,
+        fpLock: false,
+        tnLock: false,
+        rcLock: false,
+        prcLock: false,
+        f1Lock: false,
+        mccLock: false,
+        spfLock: false,
+        npvLock: false,
+        thsLock: false,
+        acc: action.payload,
+        lbl: state.lbl,
+      };
     case actions.ADD_MCC:
-      return { ...state, mcc: action.payload, lbl: state.lbl };
+      if (
+        action.payload < -1 ||
+        action.payload > 1 ||
+        (action.payload !== 0 && !metricReg.test(action.payload.toString()))
+      )
+        return {
+          ...state,
+          err: { mcc: "Invalid input for MCC" },
+          tsLock: true,
+          psLock: true,
+          nsLock: true,
+          tpLock: true,
+          fpLock: true,
+          fnLock: true,
+          tnLock: true,
+          rcLock: true,
+          prcLock: true,
+          accLock: true,
+          f1Lock: true,
+          spfLock: true,
+          npvLock: true,
+          thsLock: true,
+        };
+      return {
+        ...state,
+        err: { mcc: "" },
+        tsLock: false,
+        psLock: false,
+        fpLock: false,
+        nsLock: false,
+        tpLock: false,
+        fnLock: false,
+        tnLock: false,
+        rcLock: false,
+        prcLock: false,
+        accLock: false,
+        f1Lock: false,
+        spfLock: false,
+        npvLock: false,
+        thsLock: false,
+        mcc: action.payload,
+        lbl: state.lbl,
+      };
 
     case actions.ADD_NPV:
-      return { ...state, npv: action.payload, lbl: state.lbl };
+      if (
+        action.payload < 0 ||
+        action.payload > 1 ||
+        !metricReg.test(action.payload.toString())
+      )
+        return {
+          ...state,
+          err: { npv: "Invalid input for NPV" },
+          tsLock: true,
+          psLock: true,
+          nsLock: true,
+          tpLock: true,
+          fpLock: true,
+          fnLock: true,
+          tnLock: true,
+          rcLock: true,
+          prcLock: true,
+          accLock: true,
+          f1Lock: true,
+          spfLock: true,
+          mccLock: true,
+          thsLock: true,
+        };
+      return {
+        ...state,
+        err: { npv: "" },
+        tsLock: false,
+        psLock: false,
+        nsLock: false,
+        tpLock: false,
+        fnLock: false,
+        fpLock: false,
+        tnLock: false,
+        rcLock: false,
+        prcLock: false,
+        accLock: false,
+        f1Lock: false,
+        spfLock: false,
+        mccLock: false,
+        thsLock: false,
+        npv: action.payload,
+        lbl: state.lbl,
+      };
 
     case actions.ADD_SPF:
-      return { ...state, spf: action.payload, lbl: state.lbl };
+      if (
+        action.payload < 0 ||
+        action.payload > 1 ||
+        !metricReg.test(action.payload.toString())
+      )
+        return {
+          ...state,
+          err: { spf: "Invalid input for specificity" },
+          tsLock: true,
+          psLock: true,
+          nsLock: true,
+          tpLock: true,
+          fpLock: true,
+          fnLock: true,
+          tnLock: true,
+          rcLock: true,
+          prcLock: true,
+          accLock: true,
+          f1Lock: true,
+          mccLock: true,
+          npvLock: true,
+          thsLock: true,
+        };
+      return {
+        ...state,
+        err: { spf: "" },
+        tsLock: false,
+        psLock: false,
+        nsLock: false,
+        tpLock: false,
+        fnLock: false,
+        fpLock: false,
+        tnLock: false,
+        rcLock: false,
+        prcLock: false,
+        accLock: false,
+        f1Lock: false,
+        mccLock: false,
+        npvLock: false,
+        thsLock: false,
+        spf: action.payload,
+        lbl: state.lbl,
+      };
+    case actions.ADD_THS:
+      if (
+        action.payload < 0 ||
+        action.payload > 1 ||
+        !metricReg.test(action.payload.toString())
+      )
+        return {
+          ...state,
+          err: { ths: "Invalid input for threat score" },
+          tsLock: true,
+          psLock: true,
+          nsLock: true,
+          tpLock: true,
+          fnLock: true,
+          fpLock: true,
+          mccLock: true,
+          tnLock: true,
+          rcLock: true,
+          prcLock: true,
+          accLock: true,
+          f1Lock: true,
+          spfLock: true,
+          npvLock: true,
+        };
+      return {
+        ...state,
+        err: { spf: "" },
+        tsLock: false,
+        psLock: false,
+        nsLock: false,
+        tpLock: false,
+        fpLock: false,
+        fnLock: false,
+        tnLock: false,
+        rcLock: false,
+        prcLock: false,
+        accLock: false,
+        f1Lock: false,
+        mccLock: false,
+        npvLock: false,
+        spfLock: false,
+        ths: action.payload,
+        lbl: state.lbl,
+      };
 
     default:
       return;

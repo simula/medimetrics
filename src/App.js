@@ -15,7 +15,7 @@ function App() {
         <Route path="/" exact component={Home} />
         <Redirect from="/" to="/" />
       </Switch>
-      <Footer text={` Simula Research Laboratory 2021`} />
+      <Footer text={` SimulaMet 2021`} />
     </div>
   );
 }

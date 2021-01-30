@@ -1,6 +1,6 @@
 {
-  "homepage": "http://malekhammou.github.io/ai-metrics",
-  "name": "reverse-metrics",
+  "homepage": "https://medimetrics.no/",
+  "name": "medimetrics",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
