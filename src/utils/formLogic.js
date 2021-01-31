@@ -1298,7 +1298,8 @@ const reducer = (state, action) => {
             : state.tp && state.ps && state.ns
             ? state.tp / (state.ps + state.ns - action.payload)
             : state.ps && state.fn && state.ns
-            ? (state.ps - state.fn) / (state.ps + action.ns - action.payload)
+            ? (state.ps - state.fn) /
+              (state.ps + action.payload - action.payload)
             : state.ths,
       };
     case actions.ADD_RC:
