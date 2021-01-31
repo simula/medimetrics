@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter basename="/ai-metrics">
+    <BrowserRouter basename="/medimetrics">
       <App />
     </BrowserRouter>
   </React.StrictMode>,
