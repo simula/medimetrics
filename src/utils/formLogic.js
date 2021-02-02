@@ -398,6 +398,8 @@ const reducer = (state, action) => {
           ths:
             state.tp && state.fp
               ? state.tp / (state.fp + action.payload)
+              : state.fn && state.fp
+              ? (action.payload - state.fn) / (state.fp + action.payload)
               : state.ths,
         };
     case actions.ADD_NS:
@@ -601,9 +603,18 @@ const reducer = (state, action) => {
             : state.fp
             ? (action.payload - state.fp) / action.payload
             : state.spf,
+          ths:
+            state.tp && state.fp && state.fn
+              ? state.tp / (state.tp + state.fn + state.fp)
+              : state.ps && state.fn && state.fp
+              ? (state.ps - state.fn) / (state.ps + state.fp)
+              : state.tp && state.fn && state.tn
+              ? state.tp / (state.tp + state.fn + action.payload - state.tn)
+              : state.ps && state.fn && state.tn
+              ? (state.ps - state.fn) / (state.ps + action.payload - state.tn)
+              : state.ths,
         };
     case actions.ADD_TP:
-      console.log(state.ps);
       if (
         action.payload < 0 ||
         !reg.test(action.payload.toString()) ||
@@ -736,7 +747,7 @@ const reducer = (state, action) => {
               )
             : state.ps && state.tn && state.fp
             ? (action.payload * state.tn -
-                (state.fp * state.ps - action.payload)) /
+                state.fp * (state.ps - action.payload)) /
               Math.sqrt(
                 (action.payload + state.fp) *
                   (action.payload + state.ps - action.payload) *

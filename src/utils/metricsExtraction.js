@@ -34,7 +34,6 @@ const extractAccuracy = (data) => {
   return acc;
 };
 const extractMCC = (data) => {
-  console.log("hh");
   const mcc = {
     metric: "N-MCC",
   };
