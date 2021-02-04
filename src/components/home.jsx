@@ -15,12 +15,15 @@ import {
   convertData,
 } from "../utils/metricsExtraction";
 import ConfusionMatrix from "../commonComponents/confusionMatrix";
+import ExportMetricButton from "../commonComponents/exportButton";
+import Exported from "../commonComponents/exported";
 
 const Home = ({ history }) => {
   const [confusionMatrixComponents, setConfusionMatrixComponents] = useState(
     {}
   );
   const [open, setOpen] = React.useState(false);
+  const [openExport, setOpenExport] = React.useState(false);
   const [methods, setMethods] = useState([]);
   const [sortColumn, setSortColumn] = useState({ path: "acc", order: "asc" });
   const [mappedMethods, setMappedMethods] = useState([]);
@@ -29,6 +32,12 @@ const Home = ({ history }) => {
     availableMethods &&
       setMethods(availableMethods.map((method) => convertData(method)));
   }, []);
+  const toggleExport = () => {
+    setOpenExport(true);
+  };
+  const handleExportClose = () => {
+    setOpenExport(false);
+  };
   const handleOpen = (label) => {
     setOpen(true);
     const selected = JSON.parse(sessionStorage.getItem("methods")).find(
@@ -122,6 +131,7 @@ const Home = ({ history }) => {
         <div>
           {" "}
           <AddMetricButton />
+          <ExportMetricButton onClick={() => toggleExport()} />
           <div className="visuals">
             <ReactTooltip
               className="custom-tooltip"
@@ -143,6 +153,18 @@ const Home = ({ history }) => {
                 falseNegatives={confusionMatrixComponents.fn}
                 falsePositives={confusionMatrixComponents.fp}
                 trueNegatives={confusionMatrixComponents.tn}
+              />
+            </Modal>
+            <Modal
+              className="modal"
+              open={openExport}
+              onClose={handleExportClose}
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description">
+              <Exported
+                onClick={() => {
+                  setOpenExport(false);
+                }}
               />
             </Modal>
             {
