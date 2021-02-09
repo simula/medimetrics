@@ -9,6 +9,7 @@ import AddMetricButton from "../commonComponents/addMetricButton";
 import Footer from "../commonComponents/footer";
 import Modal from "@material-ui/core/Modal";
 import _ from "lodash";
+
 import {
   extractLabels,
   processDataForChart,
@@ -22,6 +23,7 @@ const Home = ({ history }) => {
   const [confusionMatrixComponents, setConfusionMatrixComponents] = useState(
     {}
   );
+
   const [open, setOpen] = React.useState(false);
   const [openExport, setOpenExport] = React.useState(false);
   const [methods, setMethods] = useState([]);

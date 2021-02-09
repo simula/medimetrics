@@ -6,7 +6,7 @@ const DownloadButton = ({ onClick, disabled }) => {
       onClick={onClick}
       className="btn"
       id="download-button">
-      <i className="fa fa-file-pdf-o mr-2" aria-hidden="true"></i>Download{" "}
+      PDF{" "}
     </button>
   );
 };

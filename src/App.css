@@ -20,6 +20,32 @@
   outline: none;
   margin: 2.5em 0 1em 0.5em;
 }
+.control-buttons {
+  display: flex;
+}
+.csv-label {
+  position: relative;
+  bottom: 0.2em;
+}
+.csv {
+  color: black;
+  background-color: #659a37;
+  color: white;
+  outline: none;
+  height: fit-content;
+  margin: 0 0 0.2em 0.25em;
+  width: fit-content;
+  justify-self: end;
+  border-radius: 0.1em;
+  height: 2.4em;
+  width: 3.2em;
+  text-align: center;
+  padding-top: 0.4em;
+  border: none;
+}
+.csv:hover {
+  text-decoration: none;
+}
 .exported-methods {
   border-radius: 0.15em;
   background-color: white;

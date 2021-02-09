@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { CSVLink } from "react-csv";
 import DownloadButton from "./downloadButton";
 import generatePDF from "../services/pdf";
 import { FlipyDiv } from "../animations/flipInY";
@@ -7,6 +8,7 @@ import PreviousButton from "./previousButton";
 const Exported = ({ onClick }) => {
   const [methods, setMethods] = useState([]);
   const [metrics, setMetrics] = useState([]);
+  const [csvData, setCsvData] = useState([]);
   let [firstStep, setFirstStep] = useState(true);
   let [secondStep, SetSecondStep] = useState(false);
   let [selectAllMethods, setSelectAllMethods] = useState(false);
@@ -98,7 +100,16 @@ const Exported = ({ onClick }) => {
       (metric) => (metric.selected = selectAllMetrics ? false : true)
     );
   };
-  const download = () => {
+  const downloadCSV = () => {
+    const { tableRows, tableColumns } = preprocessForDownload();
+    let data = [tableColumns, ...tableRows];
+    setCsvData(data);
+  };
+  const downloadPDF = () => {
+    const { tableRows, tableColumns } = preprocessForDownload();
+    generatePDF(tableColumns, tableRows);
+  };
+  const preprocessForDownload = () => {
     const methodsToExport = methods.filter((method) => method.selected);
     const metricstoExport = metrics.filter((metric) => metric.selected);
     const newColumns = convertMetrics(metricstoExport);
@@ -136,13 +147,13 @@ const Exported = ({ onClick }) => {
       }
       queue.push(element);
     });
+
     const tableRows = [];
     for (let i = 0; i < base.length; i++) {
       let merged = [...Object.values(base[i]), ...Object.values(queue[i])];
       tableRows.push(merged);
     }
-
-    generatePDF(tableColumns, tableRows);
+    return { tableColumns, tableRows };
   };
   const moveToSecondStep = () => {
     setFirstStep(false);
@@ -247,7 +258,22 @@ const Exported = ({ onClick }) => {
             </div>
             <div className="controls">
               <PreviousButton onClick={() => moveToFirstStep()} />
-              <DownloadButton disabled={disabled} onClick={() => download()} />
+              <div className="control-buttons">
+                <DownloadButton onClick={() => downloadPDF()} />
+                <button className="csv" disabled={disabled}>
+                  <CSVLink
+                    onClick={() => {
+                      downloadCSV();
+                    }}
+                    className="csv"
+                    data={csvData}
+                    filename={"export.csv"}
+                    separator={";"}>
+                    <i className="fas fa-file-csv"></i>{" "}
+                    <span className="csv-label">CSV</span>
+                  </CSVLink>
+                </button>
+              </div>
             </div>
           </React.Fragment>
         )}
