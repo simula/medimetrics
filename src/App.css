@@ -23,17 +23,33 @@
 .exported-methods {
   border-radius: 0.15em;
   background-color: white;
-  width: 16em;
-  height: 20em;
+  width: 18em;
+  height: 22em;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 0.5em;
+  padding: 0.5em 0.5em 0 0.5em;
+}
+.controls {
+  margin-top: 0.3em;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 #download-button {
   background-color: #3498db;
   color: white;
+  outline: none;
+  height: fit-content;
+  margin: 0 0 0.2em 0;
+  width: fit-content;
+  justify-self: end;
+  border-radius: 0.1em;
+}
+#next-button {
+  color: #3498db;
   outline: none;
   margin: 0 0 0.2em 0;
   width: fit-content;
@@ -109,6 +125,9 @@
 .export-label {
   margin-left: 0.1em;
 }
+.selectAll {
+  cursor: pointer;
+}
 .success {
   color: #5cb85c;
   display: inline;
@@ -120,6 +139,13 @@
   border: rgb(177, 177, 177) 0.085em solid;
   vertical-align: center;
 }
+.select-unselect {
+  width: 100%;
+
+  position: relative;
+  left: 65%;
+}
+
 #add-metric-form {
   display: flex;
   margin-bottom: 2.5em;
