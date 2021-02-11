@@ -22,6 +22,7 @@
     "react": "^17.0.1",
     "react-animations": "^1.0.0",
     "react-bootstrap": "^1.4.0",
+    "react-csv": "^2.0.3",
     "react-debounce-input": "^3.2.3",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
