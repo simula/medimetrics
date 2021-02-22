@@ -20,6 +20,15 @@
   outline: none;
   margin: 2.5em 0 1em 0.5em;
 }
+.download-confusion-matrix {
+  background-color: #f15d22;
+  height: 2em;
+  border-radius: 0.15em;
+  color: white;
+  outline: none;
+  margin: 2.5em 0 1em 0.5em;
+  border: none;
+}
 .control-buttons {
   display: flex;
 }
@@ -137,7 +146,9 @@
 #submit-metric-button:active,
 #submit-metric-button:focus,
 #export-metric-button:active,
-#export-metric-button:focus {
+#export-metric-button:focus,
+.download-confusion-matrix:focus,
+.download-confusion-matrix:active {
   outline: none;
   box-shadow: 0 0 0 0;
 }
@@ -207,8 +218,7 @@ th {
   height: 30em;
   padding: 2em;
 }
-#methods-table {
-}
+
 .confusion-matrix-wrapper {
   background-color: rgb(0, 0, 0);
   border-radius: 0.2em;
@@ -223,7 +233,14 @@ th {
   height: 19em;
   width: 19em;
   display: grid;
-
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+}
+.confusion-matrix-exported {
+  background-color: white;
+  height: 10em;
+  width: 10em;
+  display: grid;
   grid-template-columns: 50% 50%;
   grid-template-rows: 50% 50%;
 }
@@ -233,7 +250,15 @@ th {
   justify-content: center;
   align-items: center;
   font-weight: 350;
-  font-size: 1.9em;
+  font-size: 2em;
+}
+.matrix-cell-exported {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: 350;
+  font-size: 1em;
 }
 .component-label {
   font-weight: 400;
@@ -391,4 +416,7 @@ label {
 }
 .custom-tooltip {
   max-width: 400px !important;
+}
+.navlink:hover {
+  text-decoration: none;
 }

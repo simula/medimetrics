@@ -7,6 +7,7 @@ import Brand from "../commonComponents/brand";
 import Intro from "../commonComponents/intro";
 import AddMetricButton from "../commonComponents/addMetricButton";
 import Footer from "../commonComponents/footer";
+import DropDown from "../commonComponents/dopdown";
 import Modal from "@material-ui/core/Modal";
 import _ from "lodash";
 
@@ -16,8 +17,8 @@ import {
   convertData,
 } from "../utils/metricsExtraction";
 import ConfusionMatrix from "../commonComponents/confusionMatrix";
-import ExportMetricButton from "../commonComponents/exportButton";
 import Exported from "../commonComponents/exported";
+import ExportedMatrices from "../commonComponents/exported-matrices";
 
 const Home = ({ history }) => {
   const [confusionMatrixComponents, setConfusionMatrixComponents] = useState(
@@ -26,6 +27,7 @@ const Home = ({ history }) => {
 
   const [open, setOpen] = React.useState(false);
   const [openExport, setOpenExport] = React.useState(false);
+  const [openMatrixExport, setOpenMatrixExport] = React.useState(false);
   const [methods, setMethods] = useState([]);
   const [sortColumn, setSortColumn] = useState({ path: "acc", order: "asc" });
   const [mappedMethods, setMappedMethods] = useState([]);
@@ -37,8 +39,14 @@ const Home = ({ history }) => {
   const toggleExport = () => {
     setOpenExport(true);
   };
+  const toggleMatrixExport = () => {
+    setOpenMatrixExport(true);
+  };
   const handleExportClose = () => {
     setOpenExport(false);
+  };
+  const handleMatrixExportClose = () => {
+    setOpenMatrixExport(false);
   };
   const handleOpen = (label) => {
     setOpen(true);
@@ -133,7 +141,10 @@ const Home = ({ history }) => {
         <div>
           {" "}
           <AddMetricButton />
-          <ExportMetricButton onClick={() => toggleExport()} />
+          <DropDown
+            onClickMethod={() => toggleExport()}
+            onMatrixExport={() => toggleMatrixExport()}
+          />
           <div className="visuals">
             <ReactTooltip
               className="custom-tooltip"
@@ -169,14 +180,51 @@ const Home = ({ history }) => {
                 }}
               />
             </Modal>
+            <Modal
+              className="modal"
+              open={openMatrixExport}
+              onClose={handleMatrixExportClose}
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description">
+              <ExportedMatrices
+                onClick={() => {
+                  setOpenMatrixExport(false);
+                }}
+              />
+            </Modal>
             {
-              <Table id="methods-table" striped bordered responsive>
+              <Table striped bordered responsive>
                 <thead>
                   <tr>
                     <th
                       className="table-header"
                       onClick={() => handleSort("lbl")}>
                       Label {renderSortIcon("lbl")}
+                    </th>
+                    <th
+                      className="table-header"
+                      onClick={() => handleSort("ts")}>
+                      TS {renderSortIcon("ts")}{" "}
+                    </th>
+                    <th
+                      className="table-header"
+                      onClick={() => handleSort("tp")}>
+                      TP {renderSortIcon("tp")}{" "}
+                    </th>
+                    <th
+                      className="table-header"
+                      onClick={() => handleSort("fp")}>
+                      FP {renderSortIcon("fp")}{" "}
+                    </th>
+                    <th
+                      className="table-header"
+                      onClick={() => handleSort("tn")}>
+                      TN {renderSortIcon("tn")}{" "}
+                    </th>
+                    <th
+                      className="table-header"
+                      onClick={() => handleSort("fn")}>
+                      FN {renderSortIcon("fn")}{" "}
                     </th>
                     <th
                       className="table-header"
@@ -226,7 +274,7 @@ const Home = ({ history }) => {
                     methods.map((method, i) => (
                       <tr key={i}>
                         <td
-                          style={{ width: "10%" }}
+                          style={{ width: "fit-content" }}
                           onClick={() => toggleMethod(method.lbl)}
                           className={
                             mappedMethods.find((e) => e.lbl === method.lbl)
@@ -241,7 +289,57 @@ const Home = ({ history }) => {
                               ? "label-cell-focus"
                               : "label-cell"
                           }
-                          style={{ width: "10%" }}>
+                          style={{ width: "fit-content" }}>
+                          {" "}
+                          {method.ts}
+                        </td>
+                        <td
+                          className={
+                            mappedMethods.find((e) => e.lbl === method.lbl)
+                              ? "label-cell-focus"
+                              : "label-cell"
+                          }
+                          style={{ width: "fit-content" }}>
+                          {" "}
+                          {method.tp}
+                        </td>
+                        <td
+                          className={
+                            mappedMethods.find((e) => e.lbl === method.lbl)
+                              ? "label-cell-focus"
+                              : "label-cell"
+                          }
+                          style={{ width: "fit-content" }}>
+                          {" "}
+                          {method.fp}
+                        </td>
+                        <td
+                          className={
+                            mappedMethods.find((e) => e.lbl === method.lbl)
+                              ? "label-cell-focus"
+                              : "label-cell"
+                          }
+                          style={{ width: "fit-content" }}>
+                          {" "}
+                          {method.tn}
+                        </td>
+                        <td
+                          className={
+                            mappedMethods.find((e) => e.lbl === method.lbl)
+                              ? "label-cell-focus"
+                              : "label-cell"
+                          }
+                          style={{ width: "fit-content" }}>
+                          {" "}
+                          {method.fn}
+                        </td>
+                        <td
+                          className={
+                            mappedMethods.find((e) => e.lbl === method.lbl)
+                              ? "label-cell-focus"
+                              : "label-cell"
+                          }
+                          style={{ width: "fit-content" }}>
                           {" "}
                           {method.acc}
                         </td>
@@ -251,7 +349,7 @@ const Home = ({ history }) => {
                               ? "label-cell-focus"
                               : "label-cell"
                           }
-                          style={{ width: "10%" }}>
+                          style={{ width: "fit-content" }}>
                           {" "}
                           {method.rc}
                         </td>
@@ -261,7 +359,7 @@ const Home = ({ history }) => {
                               ? "label-cell-focus"
                               : "label-cell"
                           }
-                          style={{ width: "10%" }}>
+                          style={{ width: "fit-content" }}>
                           {method.prc}
                         </td>
                         <td
@@ -270,7 +368,7 @@ const Home = ({ history }) => {
                               ? "label-cell-focus"
                               : "label-cell"
                           }
-                          style={{ width: "10%" }}>
+                          style={{ width: "fit-content" }}>
                           {method.f1}
                         </td>
                         <td
@@ -279,7 +377,7 @@ const Home = ({ history }) => {
                               ? "label-cell-focus"
                               : "label-cell"
                           }
-                          style={{ width: "10%" }}>
+                          style={{ width: "fit-content" }}>
                           {method.spf}
                         </td>
                         <td
@@ -288,7 +386,7 @@ const Home = ({ history }) => {
                               ? "label-cell-focus"
                               : "label-cell"
                           }
-                          style={{ width: "7%" }}>
+                          style={{ width: "7.69" }}>
                           {method.mcc}
                         </td>
                         <td
@@ -297,7 +395,7 @@ const Home = ({ history }) => {
                               ? "label-cell-focus"
                               : "label-cell"
                           }
-                          style={{ width: "10%" }}>
+                          style={{ width: "fit-content" }}>
                           {method.npv}
                         </td>
                         <td
@@ -306,7 +404,7 @@ const Home = ({ history }) => {
                               ? "label-cell-focus"
                               : "label-cell"
                           }
-                          style={{ width: "13%" }}>
+                          style={{ width: "fit-content" }}>
                           {method.ths}
                         </td>
                         <td
@@ -315,7 +413,7 @@ const Home = ({ history }) => {
                               ? "label-cell-focus"
                               : "label-cell"
                           }
-                          style={{ width: "25%" }}>
+                          style={{ width: "fit-content" }}>
                           <div className="settings">
                             <button
                               onClick={() => handleOpen(method.lbl)}
