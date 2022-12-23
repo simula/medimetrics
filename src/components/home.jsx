@@ -131,7 +131,7 @@ const Home = ({ history }) => {
       {methods.length < 1 ? (
         <div style={{ textAlign: "center", marginTop: "3.5em" }}>
           <Intro
-            text="We help researchers properly assess the quality of binary classficiation
+            text="We help researchers properly assess the quality of binary classification
         models."
           />
 
